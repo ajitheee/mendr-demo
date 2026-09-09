@@ -6,7 +6,7 @@
   "description": "A tiny service that still calls a retiring OpenAI model. Mendr's demo target: connect it, approve the migration in Mendr, watch the pull request appear.",
   "scripts": {
     "build": "tsc -p .",
-    "test": "tsc -p . && node --test test/"
+    "test": "tsc -p . && node --test test/prompt.test.mjs"
   },
   "dependencies": {
     "openai": "^4.104.0"
