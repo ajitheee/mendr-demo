@@ -1,6 +1,6 @@
-# PROOF (throwaway branch, never merged): a registry of unknown age must make a
-# zero-finding scan INCONCLUSIVE, never clean — and the App must show it beneath
-# the last completed scan, never in its place.
+# PROOF 2 (throwaway branch, never merged): a broken scanner pin must fail red and
+# leave the last stored result untouched — nothing is posted, no check is written,
+# and the overview keeps the last completed scan.
 name: mendr
 on:
   pull_request: {}
@@ -20,7 +20,7 @@ jobs:
           node-version: '22'
       - name: Audit against an UNSIGNED registry copy (unknown age ⇒ stale ⇒ inconclusive)
         env:
-          MENDR_SPEC: v0.4.7-alpha
+          MENDR_SPEC: v0.0.0-does-not-exist
           MENDR_APP_URL: https://mendr-app.onrender.com
           MENDR_REGISTRY_REFRESH: 'off'
         run: |
