@@ -33,7 +33,15 @@ on:
 jobs:
   audit:
     # Every push, pull request, the daily schedule and a manual run — not the approvals check.
-    if: github.event_name != 'schedule' || github.event.schedule == '37 6 * * *'
+    #
+    # The second clause skips pull requests opened FROM A FORK. This repository is public, and
+    # GitHub gives a fork's pull request a read-only token with no OIDC: the audit could not
+    # prove the run to the App even though it has nothing secret to protect. Without this the
+    # first contribution a stranger ever sends would show a failed Mendr check it cannot fix.
+    if: >-
+      (github.event_name != 'schedule' || github.event.schedule == '37 6 * * *') &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
       contents: read # read the code to scan it
       id-token: write # prove this run to your App; no secret to store
