@@ -45,7 +45,7 @@ jobs:
     permissions:
       contents: read # read the code to scan it
       id-token: write # prove this run to your App; no secret to store
-    uses: ajitheee/mendr/.github/workflows/reusable-audit.yml@4eb5ad8503ee9005ec8cdf0708ec90a75b9a4a02
+    uses: ajitheee/mendr/.github/workflows/reusable-audit.yml@66027a9220577d86f3958fc9c76be4b29c8bd78c
     with:
       app-url: https://mendr-app.onrender.com
       audience: mendr
@@ -57,7 +57,7 @@ jobs:
       contents: write # push the one migration branch
       pull-requests: write # open the one pull request
       id-token: write
-    uses: ajitheee/mendr/.github/workflows/reusable-migrate.yml@4eb5ad8503ee9005ec8cdf0708ec90a75b9a4a02
+    uses: ajitheee/mendr/.github/workflows/reusable-migrate.yml@66027a9220577d86f3958fc9c76be4b29c8bd78c
     with:
       app-url: https://mendr-app.onrender.com
       approval: ${{ inputs.approval }}
