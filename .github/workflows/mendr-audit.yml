@@ -19,7 +19,7 @@ name: mendr
 on:
   schedule:
     - cron: '37 6 * * *' # daily audit, off-the-hour (GitHub throttles :00 crons)
-    - cron: '17 */3 * * *' # carries out approvals made in the App (every three hours on a private repo; hourly costs ~24 min/day)
+    - cron: '17 * * * *' # carries out approvals made in the App, hourly (free: this repository is public)
   push:
     branches: [main]
   pull_request: {}
@@ -52,7 +52,7 @@ jobs:
 
   migrate:
     # The approvals schedule, and whenever the App starts this workflow — never on a push or pull request.
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && github.event.schedule == '17 */3 * * *')
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && github.event.schedule == '17 * * * *')
     permissions:
       contents: write # push the one migration branch
       pull-requests: write # open the one pull request
