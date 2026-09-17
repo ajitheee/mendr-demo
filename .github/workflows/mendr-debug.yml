@@ -1,0 +1,49 @@
+# TEMPORARY diagnostic. The audit workflow sends its report to a file with --json, so a
+# CI-only disagreement with a local run is invisible. This prints the human report and the
+# raw coverage so the difference can be read. Delete once the question is answered.
+name: mendr-debug
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "git ref to scan"
+        required: false
+        default: "mendr/deprecated-model-ids"
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - run: npm install -g npm@^11
+
+      - name: What is actually on disk
+        run: |
+          echo "pwd: $(pwd)"
+          echo "--- every file git tracks ---"
+          git ls-files
+          echo "--- everything on disk, excluding .git ---"
+          find . -path ./.git -prune -o -type f -print | sort
+
+      - name: The human report
+        env:
+          MENDR_REGISTRY_REFRESH: 'on'
+        run: npx --yes "github:ajitheee/mendr#${{ vars.MENDR_SPEC }}" audit . || echo "exit=$?"
+
+      - name: The raw coverage
+        env:
+          MENDR_REGISTRY_REFRESH: 'on'
+        run: |
+          npx --yes "github:ajitheee/mendr#${{ vars.MENDR_SPEC }}" audit . --json > out.json 2>/dev/null || true
+          node -e "const j=require('./out.json');console.log('conclusion:',j.conclusion);console.log('source:',JSON.stringify(j.coverage.source,null,1));console.log('config:',JSON.stringify(j.coverage.config,null,1));console.log('registry:',JSON.stringify(j.coverage.registry,null,1));"
